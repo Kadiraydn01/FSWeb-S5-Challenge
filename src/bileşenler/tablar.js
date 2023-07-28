@@ -12,9 +12,9 @@
 //   <div class="tab">teknoloji</div>
 // </div>
 
-import { response } from "express";
-import { errors } from "msw/lib/types/context";
-
+// import { response } from "express";
+// import { errors } from "msw/lib/types/context";
+// import { rest } from "msw";
 //
 const Tablar = (konu) => {
   const div2 = document.createElement("div");
@@ -36,17 +36,26 @@ const Tablar = (konu) => {
 // Yanıtın içindeki konu dizisini bulun ve Tablar bileşenini kullanarak tabları oluşturun.
 // Tabları, fonksiyona iletilen seçiciyle eşleşen DOM'daki öğeye ekleyin.
 //
+
 const tabEkleyici = (secici) => {
   const apiUrl = "http://localhost:5001/api/konular";
-  fetch(apiUrl)
-    .then((response) => response.json())
-    .then((data) => {
-      const diziKonu = data.konu;
-      const element = Tablar(diziKonu);
+  const sorun = new XMLHttpRequest();
+  sorun.open("GET", apiUrl, true);
+  sorun.onload = function () {
+    if (sorun.status >= 200 && sorun.status < 300) {
+      const cevap = JSON.parse(sorun.cevap);
+      const dizi2 = cevap.konu;
+      const element = Tablar(dizi2);
       const sonuc = document.querySelector(secici);
       sonuc.appendChild(element);
-    })
-    .catch((error) => console.log("API hatası:", error));
+    } else {
+      console.log("API hatası:", sorun.status, sorun.statusText);
+    }
+  };
+  sorun.onerror = function () {
+    console.log("API hatası: Bağlantı hatası");
+  };
+  sorun.send;
 };
 
 export { Tablar, tabEkleyici };
