@@ -27,6 +27,7 @@ const Card = (makale) => {
   cardDiv.addEventListener("click", () => {
     console.log(makale.anabaslik);
   });
+
   return cardDiv;
 };
 // GÖREV 5
@@ -48,15 +49,27 @@ const Card = (makale) => {
 // </div>
 //
 
+// GÖREV 6
+// ---------------------
+// Tek bağımsız değişkeni olarak bir css seçici alan bu fonksiyonu uygulayın.
+// Makaleleri bu uç noktadan almalıdır: `http://localhost:5001/api/makaleler` (console.log ile test edin!!).
+// Bununla birlikte, makaleler tek bir düzenli dizi halinde organize edilmemiştir. Yanıtı yakından inceleyin!
+// Card bileşenini kullanarak yanıttaki her makale nesnesinden bir kart oluşturun.
+// Her cardı, fonksiyona iletilen seçiciyle eşleşen DOM'daki öğeye ekleyin.
+//
 const cardEkleyici = (secici) => {
-  // GÖREV 6
-  // ---------------------
-  // Tek bağımsız değişkeni olarak bir css seçici alan bu fonksiyonu uygulayın.
-  // Makaleleri bu uç noktadan almalıdır: `http://localhost:5001/api/makaleler` (console.log ile test edin!!).
-  // Bununla birlikte, makaleler tek bir düzenli dizi halinde organize edilmemiştir. Yanıtı yakından inceleyin!
-  // Card bileşenini kullanarak yanıttaki her makale nesnesinden bir kart oluşturun.
-  // Her cardı, fonksiyona iletilen seçiciyle eşleşen DOM'daki öğeye ekleyin.
-  //
+  fetch("http://localhost:5001/api/makaleler")
+    .then((response) => response.json())
+    .then((data) => {
+      const makaleler = data.makaleler;
+
+      makaleler.forEach((makale) => {
+        const cardElement = Card(makale);
+        const sonuc = document.querySelector(secici);
+        sonuc.appendChild(cardElement);
+      });
+    })
+    .catch((error) => console.log("API hatası:", error));
 };
 
 export { Card, cardEkleyici };
